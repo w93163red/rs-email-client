@@ -4,8 +4,8 @@ use std::path::Path;
 
 #[derive(Debug)]
 pub struct User {
-    email: String,
-    token: String,
+    pub email: String,
+    pub token: String,
 }
 
 impl User {

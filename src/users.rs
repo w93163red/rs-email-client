@@ -1,8 +1,10 @@
 use serde::Deserialize;
+use serde::Serialize;
 use std::fs::File;
 use std::io::BufReader;
+use std::io::BufWriter;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct User {
     pub email: String,
     pub token: String,
@@ -16,5 +18,14 @@ impl User {
 
         println!("{:?}", u);
         Ok(u)
+    }
+
+    pub fn write_to_file(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let file = File::open("./acc.txt")?;
+        let writer = BufWriter::new(file);
+        serde_json::to_writer(writer, &self)?;
+        println!("{:#?}", &self);
+        println!("write to file");
+        Ok(())
     }
 }

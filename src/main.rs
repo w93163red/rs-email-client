@@ -26,12 +26,14 @@ impl imap::Authenticator for GmailOAuth2 {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let auth = oauth2::authorization()?;
-    let user = match User::new() {
+    let mut user = match User::new() {
         Ok(u) => u,
         Err(_err) => {
             panic!("user init failed");
         }
     };
+    user.token = String::from(&auth);
+    user.write_to_file()?;
     let gmail_auth = GmailOAuth2 {
         user: user.email,
         access_token: auth,

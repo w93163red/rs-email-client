@@ -2,10 +2,10 @@
 
 use serde::Deserialize;
 
+use std::collections::HashMap;
 use std::error::Error;
 use std::fs::File;
 use std::io::BufReader;
-use std::collections::HashMap;
 use text_io::read;
 
 #[derive(Deserialize, Debug)]
@@ -19,7 +19,7 @@ pub fn read_authorize_info() -> Result<Auth, Box<dyn Error>> {
     let reader = BufReader::new(file);
 
     let u = serde_json::from_reader(reader)?;
-    println!("{:?}", u); 
+    println!("{:?}", u);
     Ok(u)
 }
 
@@ -28,11 +28,10 @@ pub fn authorization() -> Result<String, Box<dyn Error>> {
     let url = generate_permission_url(&user.client_id);
     println!("To authorize token, visit the url");
     println!("{:?}", url);
-    let access_token: String = read!("access_token: {}");
+    let access_token: String = read!("{}");
     println!("access_token: {}", access_token);
     Ok(access_token)
-} 
-
+}
 
 pub fn generate_permission_url(client_id: &str) -> String {
     let mut params = HashMap::new();
@@ -48,7 +47,7 @@ pub fn generate_permission_url(client_id: &str) -> String {
 pub fn format_url_params(params: HashMap<&str, &str>) -> String {
     let mut param_list = Vec::new();
     for (key, value) in &params {
-        param_list.push(format!("{}={}", key, value)); 
+        param_list.push(format!("{}={}", key, value));
     }
     param_list.join("&")
 }

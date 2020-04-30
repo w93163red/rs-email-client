@@ -1,6 +1,9 @@
 extern crate base64;
 extern crate imap;
 extern crate native_tls;
+extern crate percent_encoding;
+extern crate reqwest;
+
 mod oauth2;
 mod users;
 use native_tls::TlsConnector;
@@ -24,8 +27,9 @@ impl imap::Authenticator for GmailOAuth2 {
     }
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let auth = oauth2::authorization()?;
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let auth = oauth2::authorization().await?;
     let mut user = match User::new() {
         Ok(u) => u,
         Err(_err) => {
@@ -36,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     user.write_to_file()?;
     let gmail_auth = GmailOAuth2 {
         user: user.email,
-        access_token: auth,
+        access_token: user.token,
     };
     let domain = "imap.gmail.com";
     let port = 993;

@@ -23,7 +23,6 @@ impl User {
     pub fn write_to_file(&self) -> Result<(), Box<dyn std::error::Error>> {
         let file = File::create("./acc.txt")?;
         let writer = BufWriter::new(file);
-        let temp = &self;
         serde_json::to_writer(writer, &self)?;
         println!("{:#?}", &self);
         println!("write to file");
